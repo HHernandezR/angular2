@@ -1,0 +1,133 @@
+<div class="row">
+  <div class="col-md-12 text-right">
+
+    <table>
+      <tbody>
+        <tr>
+          <td>
+            <nav class="navbar navbar-light bg-faded">
+              <div class="form-inline">
+                <input [(ngModel)]="paramBuscar"
+                  class="form-control mr-sm-2"
+                  type="text"
+                  placeholder="Búscar Héroe...">
+              </div>
+            </nav>
+          </td>
+          <td><br></td>
+          <td>
+            <button (click)="agregarHeroe()"
+            class="btn btn-outline-primary"
+            type="button" name="button">Nuevo Heroe</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<br>
+
+<div class="container" *ngIf="abrirAlert">
+
+  <div *ngIf="resultadoOperacion"
+    id="successAlert"
+    class="alert alert-success" role="alert" aria-label="Close">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Héroe Eliminado!</strong> El Heroe se ha eliminado correctamnete.
+  </div>
+
+  <div *ngIf="resultadoOperacion == false"
+    id="errorAlert"
+    class="alert alert-danger" role="alert" aria-label="Close">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Error al Eliminar Héroe!</strong> Se presentó un error al eliminar el Héroe.
+  </div>
+
+</div>
+
+<div class="row animated fadeIn fast">
+  <div class="col-md-12">
+    <div class="table-responsive">
+
+      <table class="table" *ngIf="heroesList.length > 0">
+        <thead class="thead-inverse">
+          <tr>
+            <th>id</th>
+            <th>Nombre</th>
+            <th>Poder</th>
+            <th>Casa</th>
+            <th>Imagen</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let heroe of heroesList|search:paramBuscar | paginate: { id: 'id',itemsPerPage: 3,currentPage: page,totalItems: total }; let i = index">
+            <td><strong>{{heroe.id}}</strong></td>
+            <td>{{heroe.nombre}}</td>
+            <td>{{heroe.poder}}</td>
+            <td>{{heroe.casa}}</td>
+            <td>
+              <img class="container-img"
+              [src]="heroe.imagen | sinimagen"
+              [alt]="">
+            </td>
+            <td class="text-right w120">
+              <button (click)="editarHeroe(heroe.id)"
+                class="btn btn-outline-success"
+                type="button" >
+                Editar
+              </button>
+              <button (click)="openDeleteModal(heroe.id)"
+                class="btn btn-outline-danger"
+                type="button" >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="heroesList.length > 0">
+
+  <pagination-controls class="pagination justify-content-center"
+                  id="id"
+                  (pageChange)="page = $event"
+                  maxSize="4"
+                  directionLinks="true"
+                  autoHide="false"
+                  previousLabel="Anterior"
+                  nextLabel="Siguiente"
+                  screenReaderPaginationLabel="Pagination"
+                  screenReaderPageLabel="page"
+                  screenReaderCurrentLabel="You're on page">
+  </pagination-controls>
+
+</div>
+
+<div class="modal fade" id="deleteModal"
+  role="dialog"
+  aria-hidden="true"
+  data-backdrop="static"
+  data-keyboard="false">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Elimiar Héroe</h5>
+    </div>
+    <div class="modal-body">
+      <p>Desea Eliminar el Heroe Seleccionado?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="eliminarHeroe()">Eliminar</button>
+      <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+</div>
